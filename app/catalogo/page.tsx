@@ -17,10 +17,10 @@ const postres = [
 
 export default function CatalogoPage() {
   
-  // Esta función luego la conectará la Persona 4 (Carrito)
+  // Esta funcion es para conectar al carrito
   const handleAddToCart = (productName: string) => {
     console.log(`Añadido al carrito: ${productName}`);
-    // Aquí la Persona 4 agregará la lógica del estado global o context
+    // Aqui falta la logica del carrito
   };
 
   return (
