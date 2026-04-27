@@ -3,15 +3,14 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-
 import { cafes, postres } from "@/data/mockData"; 
 
 export default function CatalogoPage() {
   // Esta funcion es para conectar al carrito
   const handleAddToCart = (productName: string) => {
     console.log(`Añadido al carrito: ${productName}`);
- // Aqui falta la logica del carrito  
-};
+    // Aqui falta la logica del carrito  
+  };
 
   return (
     <div className="min-h-screen bg-white pb-20" style={{ fontFamily: 'Verdana, sans-serif' }}>
@@ -35,20 +34,20 @@ export default function CatalogoPage() {
               <Card key={cafe.id} className="w-full max-w-[400px] overflow-hidden shadow-lg border-none hover:shadow-2xl transition-all duration-300 hover:scale-[1.03]">
                 <div className="h-[300px] overflow-hidden">
                   <img 
-                    src={cafe.image} 
-                    alt={cafe.name} 
+                    src={cafe.imagen} 
+                    alt={cafe.nombre} 
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>
                 <CardHeader className="pb-2 pt-6">
-                  <CardTitle className="text-2xl font-bold text-gray-900">{cafe.name}</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-gray-900">{cafe.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xl font-black text-gray-900">{cafe.price}</p>
+                  <p className="text-xl font-black text-gray-900">S/ {cafe.precio.toFixed(2)}</p>
                 </CardContent>
                 <CardFooter className="pb-6">
                   <Button 
-                    onClick={() => handleAddToCart(cafe.name)}
+                    onClick={() => handleAddToCart(cafe.nombre)}
                     className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-7 text-lg font-bold"
                   >
                     Añadir al carrito
@@ -69,20 +68,20 @@ export default function CatalogoPage() {
               <Card key={postre.id} className="w-full max-w-[400px] overflow-hidden shadow-lg border-none hover:shadow-2xl transition-all duration-300 hover:scale-[1.03]">
                 <div className="h-[300px] overflow-hidden">
                   <img 
-                    src={postre.image} 
-                    alt={postre.name} 
+                    src={postre.imagen} 
+                    alt={postre.nombre} 
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>
                 <CardHeader className="pb-2 pt-6">
-                  <CardTitle className="text-2xl font-bold text-gray-900">{postre.name}</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-gray-900">{postre.nombre}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-xl font-black text-gray-900">{postre.price}</p>
+                  <p className="text-xl font-black text-gray-900">S/ {postre.precio.toFixed(2)}</p>
                 </CardContent>
                 <CardFooter className="pb-6">
                   <Button 
-                    onClick={() => handleAddToCart(postre.name)}
+                    onClick={() => handleAddToCart(postre.nombre)}
                     className="w-full bg-black text-white hover:bg-gray-800 transition-colors py-7 text-lg font-bold"
                   >
                     Añadir al carrito
