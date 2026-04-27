@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-
 import Image from "next/image";
 import {
   ShoppingCart,
@@ -30,9 +29,9 @@ import { Badge } from "@/components/ui/badge";
 import { useCarritoStore } from "@/store/useCarritoStore";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Paleta cafetería premium
-//   café oscuro : #3B1A08  |  café medio : #6B3A2A
-//   naranja cálido : #C8793A  |  crema : #F5ECD7  |  beige claro : #EAD9BC
+// Paleta Harbest
+//   verde oscuro : #3D4A24  |  verde medio : #4F6130
+//   salvia claro : #C4D4A0  |  crema verdosa : #F4F7EE  |  borde : #C4D4A0/30
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function CarritoSidebar() {
@@ -49,14 +48,13 @@ export function CarritoSidebar() {
 
   return (
     <Sheet>
-      {/* ── Trigger ──────────────────────────────────────────────────────── */}
       <SheetTrigger asChild>
         <button
           aria-label="Abrir carrito"
           className="
             relative flex h-10 w-10 items-center justify-center rounded-full
-            bg-[#3B1A08] text-[#F5ECD7]
-            transition-all hover:bg-[#6B3A2A] active:scale-95
+            bg-[#3D4A24] text-[#F4F7EE]
+            transition-all hover:bg-[#4F6130] active:scale-95
           "
         >
           <ShoppingCart size={18} strokeWidth={1.8} />
@@ -65,7 +63,7 @@ export function CarritoSidebar() {
             <span
               className="
                 absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center
-                rounded-full bg-[#C8793A] text-[10px] font-semibold text-white
+                rounded-full bg-[#C4D4A0] text-[10px] font-semibold text-[#3D4A24]
               "
             >
               {totalUnidades > 99 ? "99+" : totalUnidades}
@@ -74,18 +72,16 @@ export function CarritoSidebar() {
         </button>
       </SheetTrigger>
 
-      {/* ── Panel lateral ────────────────────────────────────────────────── */}
       <SheetContent
         side="right"
         className="
           flex h-full w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-sm
-          border-l border-[#EAD9BC] bg-[#FDFAF4]
+          border-l border-[#C4D4A0]/30 bg-[#F8FAF3]
         "
       >
-        {/* ─ Header ─────────────────────────────────────────────────────── */}
         <SheetHeader className="px-6 pb-4 pt-6">
           <div className="flex items-center justify-between">
-            <SheetTitle className="flex items-center gap-2.5 text-[#3B1A08]">
+            <SheetTitle className="flex items-center gap-2.5 text-[#3D4A24]">
               <Coffee size={20} strokeWidth={1.6} />
               <span className="text-xl font-semibold tracking-tight">
                 Mi Pedido
@@ -96,8 +92,8 @@ export function CarritoSidebar() {
               <button
                 onClick={vaciarCarrito}
                 className="
-                  text-xs text-[#6B3A2A]/60 underline-offset-2
-                  transition-colors hover:text-[#6B3A2A] hover:underline
+                  text-xs text-[#4F6130]/60 underline-offset-2
+                  transition-colors hover:text-[#4F6130] hover:underline
                 "
               >
                 Vaciar todo
@@ -106,28 +102,25 @@ export function CarritoSidebar() {
           </div>
 
           {!carritoVacio && (
-            <p className="mt-1 text-sm text-[#6B3A2A]/70">
+            <p className="mt-1 text-sm text-[#4F6130]/70">
               {totalUnidades} {totalUnidades === 1 ? "producto" : "productos"}{" "}
               en tu carrito
             </p>
           )}
         </SheetHeader>
 
-        <Separator className="bg-[#EAD9BC]" />
+        <Separator className="bg-[#C4D4A0]/40" />
 
-        {/* ─ Contenido ──────────────────────────────────────────────────── */}
         {carritoVacio ? (
           <CarritoVacio />
         ) : (
           <>
-            {/* Lista con scroll — min-h-0 es clave: permite que flex-1 se encoja */}
             <ScrollArea className="min-h-0 flex-1">
-              <ul className="divide-y divide-[#EAD9BC]/70 px-6">
+              <ul className="divide-y divide-[#C4D4A0]/30 px-6">
                 {items.map((item) => (
                   <li key={item.id} className="py-5">
                     <div className="flex gap-4">
-                      {/* Imagen */}
-                      <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl border border-[#EAD9BC]">
+                      <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl border border-[#C4D4A0]/40">
                         <Image
                           src={item.imagen}
                           alt={item.nombre}
@@ -137,19 +130,17 @@ export function CarritoSidebar() {
                         />
                       </div>
 
-                      {/* Info */}
                       <div className="flex flex-1 flex-col gap-2">
-                        {/* Nombre + botón eliminar */}
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <p className="text-sm font-semibold leading-tight text-[#3B1A08]">
+                            <p className="text-sm font-semibold leading-tight text-[#3D4A24]">
                               {item.nombre}
                             </p>
                             <Badge
                               variant="outline"
                               className="
-                                mt-0.5 border-[#EAD9BC] bg-[#F5ECD7]
-                                px-1.5 py-0 text-[10px] font-normal text-[#6B3A2A]
+                                mt-0.5 border-[#C4D4A0]/40 bg-[#EEF3E6]
+                                px-1.5 py-0 text-[10px] font-normal text-[#4F6130]
                               "
                             >
                               {item.categoria}
@@ -160,7 +151,7 @@ export function CarritoSidebar() {
                             aria-label={`Eliminar ${item.nombre}`}
                             onClick={() => eliminarProducto(item.id)}
                             className="
-                              mt-0.5 rounded-md p-1 text-[#6B3A2A]/40
+                              mt-0.5 rounded-md p-1 text-[#4F6130]/40
                               transition-colors hover:bg-red-50 hover:text-red-500
                             "
                           >
@@ -168,24 +159,22 @@ export function CarritoSidebar() {
                           </button>
                         </div>
 
-                        {/* Stepper + precio */}
                         <div className="flex items-center justify-between">
-                          {/* Controles cantidad */}
-                          <div className="flex items-center gap-1 rounded-full border border-[#EAD9BC] bg-white px-1.5 py-1">
+                          <div className="flex items-center gap-1 rounded-full border border-[#C4D4A0]/40 bg-white px-1.5 py-1">
                             <button
                               aria-label="Disminuir cantidad"
                               onClick={() =>
                                 actualizarCantidad(item.id, item.cantidad - 1)
                               }
                               className="
-                                flex h-6 w-6 items-center justify-center rounded-full text-[#6B3A2A]
-                                transition-colors hover:bg-[#F5ECD7]
+                                flex h-6 w-6 items-center justify-center rounded-full text-[#4F6130]
+                                transition-colors hover:bg-[#EEF3E6]
                               "
                             >
                               <Minus size={12} strokeWidth={2.5} />
                             </button>
 
-                            <span className="w-6 text-center text-sm font-semibold tabular-nums text-[#3B1A08]">
+                            <span className="w-6 text-center text-sm font-semibold tabular-nums text-[#3D4A24]">
                               {item.cantidad}
                             </span>
 
@@ -196,8 +185,8 @@ export function CarritoSidebar() {
                               }
                               disabled={item.cantidad >= item.stock}
                               className="
-                                flex h-6 w-6 items-center justify-center rounded-full text-[#6B3A2A]
-                                transition-colors hover:bg-[#F5ECD7]
+                                flex h-6 w-6 items-center justify-center rounded-full text-[#4F6130]
+                                transition-colors hover:bg-[#EEF3E6]
                                 disabled:cursor-not-allowed disabled:opacity-30
                               "
                             >
@@ -205,12 +194,11 @@ export function CarritoSidebar() {
                             </button>
                           </div>
 
-                          {/* Precios */}
                           <div className="text-right">
-                            <p className="text-sm font-bold text-[#3B1A08]">
+                            <p className="text-sm font-bold text-[#3D4A24]">
                               S/.{item.subtotal.toFixed(2)}
                             </p>
-                            <p className="text-[11px] text-[#6B3A2A]/50">
+                            <p className="text-[11px] text-[#4F6130]/50">
                               S/.{item.precio.toFixed(2)} c/u
                             </p>
                           </div>
@@ -222,42 +210,37 @@ export function CarritoSidebar() {
               </ul>
             </ScrollArea>
 
-            {/* ─ Footer: resumen + CTA ─────────────────────────────────── */}
-            <div className="space-y-4 border-t border-[#EAD9BC] bg-[#F5ECD7]/60 px-6 py-5">
-              {/* Desglose de costos */}
+            <div className="space-y-4 border-t border-[#C4D4A0]/40 bg-[#EEF3E6]/60 px-6 py-5">
               <div className="space-y-2">
-                <div className="flex justify-between text-sm text-[#6B3A2A]/70">
+                <div className="flex justify-between text-sm text-[#4F6130]/70">
                   <span>Subtotal</span>
                   <span>S/.{total.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm text-[#6B3A2A]/70">
+                <div className="flex justify-between text-sm text-[#4F6130]/70">
                   <span>Envío</span>
                   <span className="font-medium text-emerald-700">Gratis</span>
                 </div>
               </div>
 
-              <Separator className="bg-[#EAD9BC]" />
+              <Separator className="bg-[#C4D4A0]/40" />
 
-              {/* Total */}
               <div className="flex items-baseline justify-between">
-                <span className="text-base font-semibold text-[#3B1A08]">
+                <span className="text-base font-semibold text-[#3D4A24]">
                   Total
                 </span>
-                <span className="text-2xl font-bold tracking-tight text-[#3B1A08]">
+                <span className="text-2xl font-bold tracking-tight text-[#3D4A24]">
                   S/.{total.toFixed(2)}
                 </span>
               </div>
 
-              {/* Botón finalizar compra */}
-              {/* Busca esta sección al final de tu Sidebar */}
               <Link href="/checkout" className="w-full">
                 <Button
                   className="
-      group w-full gap-2 rounded-xl
-      bg-[#3B1A08] py-6 text-[#F5ECD7]
-      text-base font-semibold tracking-wide shadow-none
-      transition-all hover:bg-[#6B3A2A] active:scale-[0.98]
-    "
+                    group w-full gap-2 rounded-xl
+                    bg-[#3D4A24] py-6 text-[#F4F7EE]
+                    text-base font-semibold tracking-wide shadow-none
+                    transition-all hover:bg-[#4F6130] active:scale-[0.98]
+                  "
                 >
                   <CreditCard size={18} strokeWidth={1.8} />
                   Finalizar compra
@@ -268,7 +251,7 @@ export function CarritoSidebar() {
                 </Button>
               </Link>
 
-              <p className="text-center text-[11px] text-[#6B3A2A]/50">
+              <p className="text-center text-[11px] text-[#4F6130]/50">
                 Pago seguro · Retiro en tienda disponible
               </p>
             </div>
@@ -279,22 +262,18 @@ export function CarritoSidebar() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Estado vacío
-// ─────────────────────────────────────────────────────────────────────────────
-
 function CarritoVacio() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-5 px-8 text-center">
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#F5ECD7]">
-        <CupSoda size={40} strokeWidth={1.2} className="text-[#C8793A]" />
+      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#EEF3E6]">
+        <CupSoda size={40} strokeWidth={1.2} className="text-[#4F6130]" />
       </div>
 
       <div className="space-y-1.5">
-        <p className="text-lg font-semibold text-[#3B1A08]">
+        <p className="text-lg font-semibold text-[#3D4A24]">
           Tu carrito está vacío
         </p>
-        <p className="text-sm leading-relaxed text-[#6B3A2A]/60">
+        <p className="text-sm leading-relaxed text-[#4F6130]/60">
           Aún no has agregado nada. Explora nuestro menú y encuentra tu bebida
           favorita.
         </p>
@@ -304,9 +283,9 @@ function CarritoVacio() {
         <Button
           variant="outline"
           className="
-            mt-2 rounded-xl border-[#EAD9BC] bg-white px-6
-            text-[#3B1A08] transition-colors
-            hover:border-[#C8793A] hover:bg-[#F5ECD7]
+            mt-2 rounded-xl border-[#C4D4A0]/40 bg-white px-6
+            text-[#3D4A24] transition-colors
+            hover:border-[#4F6130] hover:bg-[#EEF3E6]
           "
         >
           Ver el menú

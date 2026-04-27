@@ -16,12 +16,13 @@ export interface DatosBoleta {
   total: number;
 }
 
-// ─── Paleta de colores en RGB ─────────────────────────────────────────────────
+// ─── Paleta Harvest en RGB ────────────────────────────────────────────────────
 const C = {
-  brown: [59, 26, 8] as [number, number, number],
-  brownMid: [107, 58, 42] as [number, number, number],
-  brownLight: [200, 121, 58] as [number, number, number],
-  cream: [245, 236, 215] as [number, number, number],
+  darkGreen: [61, 74, 36] as [number, number, number], // #3D4A24
+  medGreen: [79, 97, 48] as [number, number, number], // #4F6130
+  sageLight: [196, 212, 160] as [number, number, number], // #C4D4A0
+  creamGreen: [238, 243, 230] as [number, number, number], // #EEF3E6
+  bgPage: [248, 250, 243] as [number, number, number], // #F8FAF3
   gray: [110, 110, 110] as [number, number, number],
   black: [30, 30, 30] as [number, number, number],
   white: [255, 255, 255] as [number, number, number],
@@ -30,62 +31,99 @@ const C = {
   purple: [100, 50, 150] as [number, number, number],
 };
 
-// ─── Generador de ID de pedido ────────────────────────────────────────────────
+// ─── Generador de ID ──────────────────────────────────────────────────────────
 function generarIdPedido(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let id = "CAF-";
+  let id = "HRV-";
   for (let i = 0; i < 8; i++) {
     id += chars[Math.floor(Math.random() * chars.length)];
   }
   return id;
 }
 
-// ─── Función principal exportada ──────────────────────────────────────────────
-export function generarBoleta(datos: DatosBoleta): void {
+// ─── Carga /public/logo.png como base64 ──────────────────────────────────────
+async function cargarLogoBase64(): Promise<string | null> {
+  try {
+    const res = await fetch("/logo.png");
+    if (!res.ok) return null;
+    const blob = await res.blob();
+
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => reject(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
+
+// ─── Fallback si logo.png no carga ───────────────────────────────────────────
+function drawLogoFallback(doc: jsPDF, cx: number, cy: number, r: number) {
+  doc.setFillColor(...C.darkGreen);
+  doc.circle(cx, cy, r, "F");
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(...C.white);
+  doc.text("H", cx, cy + 3.5, { align: "center" });
+}
+
+// ─── Funcion principal ───────────────────────────────────────────────────────
+export async function generarBoleta(datos: DatosBoleta): Promise<void> {
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const W = doc.internal.pageSize.getWidth();
-  const M = 20; // margen lateral
+  const M = 20;
   let y = 18;
 
   const idPedido = generarIdPedido();
   const ahora = new Date();
+
   const fecha = ahora.toLocaleDateString("es-PE", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
   const hora = ahora.toLocaleTimeString("es-PE", {
     hour: "2-digit",
     minute: "2-digit",
   });
 
+  // Carga el logo ANTES de construir el PDF
+  const logoBase64 = await cargarLogoBase64();
+
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 1 — HEADER
+  // SECCION 1 - HEADER
   // ══════════════════════════════════════════════════════════════
 
-  // Círculo marrón con ícono de café
-  doc.setFillColor(...C.brown);
-  doc.circle(M + 9, y + 9, 9, "F");
-  doc.setFontSize(13);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.white);
-  doc.text("\u2615", M + 5.2, y + 13);
+  // Franja de fondo crema verdosa
+  doc.setFillColor(...C.creamGreen);
+  doc.rect(0, 0, W, 54, "F");
 
-  // Nombre y subtítulo
+  // Logo: imagen real o fallback
+  const logoSize = 18;
+  if (logoBase64) {
+    doc.addImage(logoBase64, "PNG", M, y, logoSize, logoSize);
+  } else {
+    drawLogoFallback(doc, M + logoSize / 2, y + logoSize / 2, logoSize / 2);
+  }
+
+  // Nombre y subtitulo: comienzan DESPUES del logo
   doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.brown);
-  doc.text("Cafecito", M + 22, y + 8);
+  doc.setTextColor(...C.darkGreen);
+  doc.text("Harvest", M + logoSize + 4, y + 8);
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(...C.gray);
-  doc.text("Cafetería · Servicio de Delivery", M + 22, y + 14);
+  doc.setTextColor(...C.medGreen);
+  doc.text("Cafeteria - Servicio de Delivery", M + logoSize + 4, y + 14);
 
-  // Bloque ID/fecha a la derecha
+  // Bloque derecha
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.brown);
+  doc.setTextColor(...C.darkGreen);
   doc.text("BOLETA", W - M, y + 6, { align: "right" });
 
   doc.setFontSize(8);
@@ -95,48 +133,50 @@ export function generarBoleta(datos: DatosBoleta): void {
   doc.text(`Fecha:     ${fecha}`, W - M, y + 19, { align: "right" });
   doc.text(`Hora:      ${hora}`, W - M, y + 25, { align: "right" });
 
-  y += 34;
+  y += 36;
 
-  // Línea divisoria
-  doc.setDrawColor(...C.brownLight);
+  doc.setDrawColor(...C.sageLight);
   doc.setLineWidth(0.6);
   doc.line(M, y, W - M, y);
   y += 9;
 
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 2 — DATOS DEL CLIENTE
+  // SECCION 2 - DATOS DEL CLIENTE
   // ══════════════════════════════════════════════════════════════
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.brownMid);
+  doc.setTextColor(...C.medGreen);
   doc.text("DATOS DEL CLIENTE", M, y);
   y += 6;
 
+  // Sin tildes ni caracteres especiales: Helvetica no los soporta
   const campos: [string, string][] = [
     ["Cliente:", datos.nombre],
-    ["Teléfono:", datos.telefono],
-    ["Dirección de envío:", datos.direccion],
+    ["Telefono:", datos.telefono],
+    ["Direccion de envio:", datos.direccion],
   ];
 
   campos.forEach(([label, valor]) => {
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...C.gray);
     doc.text(label, M, y);
+
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...C.black);
     const lines = doc.splitTextToSize(valor, W - M - 55);
     doc.text(lines, M + 50, y);
+
     y += lines.length > 1 ? lines.length * 5 : 6;
   });
 
   y += 4;
 
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 3 — TABLA DE PRODUCTOS
+  // SECCION 3 - TABLA DE PRODUCTOS
   // ══════════════════════════════════════════════════════════════
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.brownMid);
+  doc.setTextColor(...C.medGreen);
   doc.text("DETALLE DEL PEDIDO", M, y);
   y += 4;
 
@@ -144,7 +184,6 @@ export function generarBoleta(datos: DatosBoleta): void {
     startY: y,
     margin: { left: M, right: M },
     head: [["Producto", "Cant.", "Precio Unit.", "Subtotal"]],
-    // ✅ Usa directamente los campos de ItemCarrito (precio viene de Producto)
     body: datos.items.map((item) => [
       item.nombre,
       item.cantidad.toString(),
@@ -152,7 +191,7 @@ export function generarBoleta(datos: DatosBoleta): void {
       `S/ ${item.subtotal.toFixed(2)}`,
     ]),
     headStyles: {
-      fillColor: C.brown,
+      fillColor: C.darkGreen,
       textColor: C.white,
       fontStyle: "bold",
       fontSize: 9,
@@ -170,8 +209,8 @@ export function generarBoleta(datos: DatosBoleta): void {
       2: { halign: "right", cellWidth: 30 },
       3: { halign: "right", cellWidth: 28 },
     },
-    alternateRowStyles: { fillColor: [253, 250, 244] },
-    tableLineColor: [220, 205, 185],
+    alternateRowStyles: { fillColor: C.bgPage },
+    tableLineColor: C.sageLight,
     tableLineWidth: 0.2,
   });
 
@@ -180,7 +219,7 @@ export function generarBoleta(datos: DatosBoleta): void {
       .finalY + 5;
 
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 4 — TOTALES
+  // SECCION 4 - TOTALES
   // ══════════════════════════════════════════════════════════════
   const colVal = W - M;
   const colLbl = W - M - 55;
@@ -190,62 +229,64 @@ export function generarBoleta(datos: DatosBoleta): void {
   const filasTotales: [string, string, [number, number, number]][] = [
     ["Subtotal:", `S/ ${datos.subtotal.toFixed(2)}`, C.gray],
     ["IGV (18%):", `S/ ${datos.igv.toFixed(2)}`, C.gray],
-    ["Envío:", "Gratis", C.green],
+    ["Envio:", "Gratis", C.green],
   ];
 
   filasTotales.forEach(([label, valor, color]) => {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...C.gray);
     doc.text(label, colLbl, y);
+
     doc.setTextColor(...color);
     doc.text(valor, colVal, y, { align: "right" });
+
     y += 5.5;
   });
 
-  doc.setDrawColor(...C.brownLight);
+  doc.setDrawColor(...C.sageLight);
   doc.setLineWidth(0.4);
   doc.line(colLbl, y, colVal, y);
   y += 5;
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
-  doc.setTextColor(...C.brown);
+  doc.setTextColor(...C.darkGreen);
   doc.text("TOTAL A PAGAR:", colLbl, y);
   doc.text(`S/ ${datos.total.toFixed(2)}`, colVal, y, { align: "right" });
   y += 12;
 
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 5 — ESTADO DE PAGO
+  // SECCION 5 - ESTADO DE PAGO
   // ══════════════════════════════════════════════════════════════
-  doc.setDrawColor(...C.brownLight);
+  doc.setDrawColor(...C.sageLight);
   doc.setLineWidth(0.4);
   doc.line(M, y, W - M, y);
   y += 7;
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(...C.brownMid);
+  doc.setTextColor(...C.medGreen);
   doc.text("ESTADO DE PAGO", M, y);
   y += 6;
 
   let textoEstado = "";
   let colorEstado: [number, number, number] = C.black;
-  let bgEstado: [number, number, number] = C.cream;
+  let bgEstado: [number, number, number] = C.creamGreen;
 
   if (datos.metodoPago === "tarjeta") {
     const ultimos4 = datos.numeroTarjeta
       ? datos.numeroTarjeta.replace(/\s/g, "").slice(-4)
       : "****";
-    textoEstado = `PAGADO — Tarjeta terminada en ${ultimos4}`;
+    textoEstado = `PAGADO - Tarjeta terminada en ${ultimos4}`;
     colorEstado = C.green;
     bgEstado = [230, 245, 235];
   } else if (datos.metodoPago === "yape") {
-    textoEstado = `PAGADO — Transferencia Yape/Plin · Operación: ${datos.numeroOperacion ?? "—"}`;
+    textoEstado = `PAGADO - Transferencia Yape/Plin - Operacion: ${datos.numeroOperacion ?? "-"}`;
     colorEstado = C.purple;
     bgEstado = [240, 232, 250];
   } else {
     textoEstado =
-      "PAGO PENDIENTE — Contra entrega · El repartidor cobrará el monto total al llegar";
+      "PAGO PENDIENTE - Contra entrega. El repartidor cobrara el monto total al llegar.";
     colorEstado = C.orange;
     bgEstado = [252, 240, 220];
   }
@@ -257,6 +298,7 @@ export function generarBoleta(datos: DatosBoleta): void {
   doc.setDrawColor(...colorEstado);
   doc.setLineWidth(0.4);
   doc.roundedRect(M, y, W - M * 2, boxH, 2, 2, "FD");
+
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(...colorEstado);
@@ -265,34 +307,34 @@ export function generarBoleta(datos: DatosBoleta): void {
   y += boxH + 10;
 
   // ══════════════════════════════════════════════════════════════
-  // SECCIÓN 6 — FOOTER
+  // SECCION 6 - FOOTER
   // ══════════════════════════════════════════════════════════════
-  doc.setDrawColor(...C.brownLight);
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFillColor(...C.creamGreen);
+  doc.rect(0, pageH - 22, W, 22, "F");
+
+  doc.setDrawColor(...C.sageLight);
   doc.setLineWidth(0.4);
   doc.line(M, y, W - M, y);
   y += 7;
 
   doc.setFont("helvetica", "italic");
   doc.setFontSize(8.5);
-  doc.setTextColor(...C.brownMid);
-  doc.text(
-    "\u2615  ¡Gracias por tu pedido! Que disfrutes tu café.  \u2615",
-    W / 2,
-    y,
-    { align: "center" },
-  );
+  doc.setTextColor(...C.medGreen);
+  doc.text("-- Gracias por tu pedido! Que disfrutes tu cafe. --", W / 2, y, {
+    align: "center",
+  });
   y += 5;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7.5);
   doc.setTextColor(...C.gray);
   doc.text(
-    `Cafecito · ID de verificación: ${idPedido} · ${fecha} ${hora}`,
+    `Harvest | ID de verificacion: ${idPedido} | ${fecha} ${hora}`,
     W / 2,
     y,
     { align: "center" },
   );
 
-  // ── Descarga el archivo ──
-  doc.save(`boleta-cafecito-${idPedido}.pdf`);
+  doc.save(`boleta-Harvest-${idPedido}.pdf`);
 }
