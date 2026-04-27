@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { cafes, postres } from "@/data/mockData"; 
 
 export default function CatalogoPage() {
-  
+  // Esta funcion es para conectar al carrito
   const handleAddToCart = (productName: string) => {
     console.log(`Añadido al carrito: ${productName}`);
-  };
+ // Aqui falta la logica del carrito  
+};
 
   return (
     <div className="min-h-screen bg-white pb-20" style={{ fontFamily: 'Verdana, sans-serif' }}>
