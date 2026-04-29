@@ -45,7 +45,7 @@ export default function CatalogoPage() {
             Nuestro Menú
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#4F6130]/70">
-            Granos de origen único, preparados con técnica y servidos con
+            Granos especiales de origen único, preparados con técnica y servidos con
             pasión.
           </p>
         </div>
@@ -79,7 +79,7 @@ export default function CatalogoPage() {
               Dulces Tentaciones
             </h2>
             <Badge className="border border-[#C4D4A0]/40 bg-[#EEF3E6] text-[#4F6130] shadow-none">
-              {postres.length} opciones
+              {postres.length} Nuestras opciones
             </Badge>
           </div>
 
