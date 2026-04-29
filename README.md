@@ -1,4 +1,4 @@
-# Cafetería Harbest — Frontend
+# Cafetería Harvest — Frontend
 
 Plataforma web para la gestión de pedidos y catálogo de productos de la Cafetería Harvest. Desarrollada como proyecto académico del curso **Herramientas de Desarrollo**.
 
@@ -6,7 +6,7 @@ Plataforma web para la gestión de pedidos y catálogo de productos de la Cafete
 
 ## Tabla de contenidos
 
-- [Cafetería Harbest — Frontend](#cafetería-harbest--frontend)
+- [Cafetería Harvest — Frontend](#cafetería-harvest--frontend)
   - [Tabla de contenidos](#tabla-de-contenidos)
   - [Descripción](#descripción)
   - [Stack tecnológico](#stack-tecnológico)
