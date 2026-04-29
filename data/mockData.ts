@@ -155,12 +155,21 @@ export const cafes = PRODUCTOS.filter(p => p.categoria !== "Repostería");
 export const postres = PRODUCTOS.filter(p => p.categoria === "Repostería");
 
 // 4. Datos de Usuario y Carrito para pruebas
-export const MOCK_USER: Usuario = {
+export const MOCK_USER: Usuario [] = [
+ { 
   email: "admin@cafeteria.com",
   nombre: "Juan Valdez",
   rol: "Cliente Premium",
   avatar: "https://github.com/shadcn.png"
-};
+},
+{
+    email: "usuario@cafeteria.com",
+    password: "123456",
+    nombre: "Marcia Gómez",
+    rol: "Cliente",
+    avatar: "https://github.com/shadcn.png"
+  }
+];
 
 export const MOCK_CARRITO: ItemCarrito[] = [
   { ...PRODUCTOS[0], cantidad: 2, subtotal: 5.00 },

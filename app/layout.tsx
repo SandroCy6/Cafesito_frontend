@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ConditionalLayout from "@/components/ConditionalLayout";
 import PageTransition from "@/components/PageTransition";
 // Playfair Display → títulos (--font-playfair)
 const playfair = Playfair_Display({
@@ -37,11 +38,9 @@ export default function RootLayout({
       className={`${playfair.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-[#F5ECD7] font-sans text-[#3B1A08]">
-        <Navbar />
-        <main className="flex-1">
+         <ConditionalLayout>
           <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer />
+        </ConditionalLayout>
       </body>
     </html>
   );

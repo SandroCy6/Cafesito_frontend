@@ -11,27 +11,37 @@ export default function RegisterForm({ switchToLogin }: any) {
   const [password, setPassword] = useState("");
 
   const handleRegister = (e: any) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!name || !phone || !email || !password) {
-      alert("Completa todos los campos");
-      return;
-    }
+  if (!name || !phone || !email || !password) {
+    alert("Completa todos los campos");
+    return;
+  }
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const exists = users.find((u: any) => u.email === email);
+  // Leer usuarios guardados en localStorage
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const exists = users.find((u: any) => u.email === email);
 
-    if (exists) {
-      alert("El usuario ya existe");
-      return;
-    }
+  if (exists) {
+    alert("El usuario ya existe");
+    return;
+  }
 
-    users.push({ email, password });
-    localStorage.setItem("users", JSON.stringify(users));
-    alert("Usuario registrado correctamente");
-    switchToLogin();
+  // Guardar con el mismo formato que USUARIOS_MOCK
+  const nuevoUsuario = {
+    email,
+    password,
+    nombre: name,
+    telefono: phone,
+    rol: "Cliente",
+    avatar: "https://github.com/shadcn.png"
   };
 
+  users.push(nuevoUsuario);
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Usuario registrado correctamente");
+  switchToLogin();
+};
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"

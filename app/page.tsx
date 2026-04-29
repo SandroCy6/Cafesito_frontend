@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 // ── Importamos los datos reales ──────────────────────────────────────────────
 import { PRODUCTOS, cafes } from "@/data/mockData";
@@ -61,6 +63,20 @@ const DESTACADOS = cafes.slice(0, 3);
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function HomePage() {
+  const router = useRouter();
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const isLogged = localStorage.getItem("isLogged");
+    if (!isLogged) {
+      router.replace("/auth"); // replace en vez de push
+    } else {
+      setChecking(false);
+    }
+  }, []);
+
+  if (checking) return null;
+
   return (
     <>
       {/* ══════════════════════════════════════════════════════════
@@ -139,23 +155,23 @@ export default function HomePage() {
             {/* Mini stats */}
             <motion.div variants={fadeUp} className="flex gap-8 pt-2">
               {[
-                { valor: `${PRODUCTOS.length}+`, label: "Variedades" },
-                { valor: "4.9", label: "Valoración media", icon: Star },
-                { valor: "500+", label: "Clientes felices" },
-              ].map(({ valor, label, icon: Icon }) => (
-                <div key={label} className="space-y-0.5">
-                  <p className="flex items-center gap-1 text-xl font-bold text-[#3D4A24]">
-                    {Icon && (
-                      <Icon
-                        size={14}
-                        className="text-[#4F6130]"
-                        fill="#4F6130"
-                      />
-                    )}
-                    {valor}
-                  </p>
-                  <p className="text-xs text-[#4F6130]/70">{label}</p>
-                </div>
+                { valor: `${ PRODUCTOS.length } +`, label: "Variedades" },
+              {valor: "4.9", label: "Valoración media", icon: Star },
+              {valor: "500+", label: "Clientes felices" },
+              ].map(({valor, label, icon: Icon }) => (
+              <div key={label} className="space-y-0.5">
+                <p className="flex items-center gap-1 text-xl font-bold text-[#3D4A24]">
+                  {Icon && (
+                    <Icon
+                      size={14}
+                      className="text-[#4F6130]"
+                      fill="#4F6130"
+                    />
+                  )}
+                  {valor}
+                </p>
+                <p className="text-xs text-[#4F6130]/70">{label}</p>
+              </div>
               ))}
             </motion.div>
           </motion.div>
@@ -449,3 +465,4 @@ export default function HomePage() {
     </>
   );
 }
+
