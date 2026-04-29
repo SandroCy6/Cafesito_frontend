@@ -10,16 +10,26 @@ export default function LoginForm({ switchToRegister }: any) {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
     if (!email || !password) {
       alert("Completa todos los campos");
       return;
     }
+
     const users = JSON.parse(localStorage.getItem("users") || "[]");
+
     const user = users.find(
       (u: any) => u.email === email && u.password === password
     );
+
     if (user) {
-      alert("Bienvenido de vuelta");
+      // guardar sesión
+      localStorage.setItem("isLogged", "true");
+
+      alert("Bienvenido de vuelta a Harvest Coffeehouse");
+
+      //  redirigir al home
+      window.location.href = "/";
     } else {
       alert("Credenciales incorrectas");
     }
