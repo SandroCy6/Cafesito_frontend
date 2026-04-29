@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cafetería Harbest — Frontend
 
-## Getting Started
+Plataforma web para la gestión de pedidos y catálogo de productos de la Cafetería Harvest. Desarrollada como proyecto académico del curso **Herramientas de Desarrollo**.
 
-First, run the development server:
+---
+
+## Tabla de contenidos
+
+- [Cafetería Harbest — Frontend](#cafetería-harbest--frontend)
+  - [Tabla de contenidos](#tabla-de-contenidos)
+  - [Descripción](#descripción)
+  - [Stack tecnológico](#stack-tecnológico)
+  - [Estructura del proyecto](#estructura-del-proyecto)
+  - [Cómo ejecutar el proyecto](#cómo-ejecutar-el-proyecto)
+    - [Requisitos previos](#requisitos-previos)
+    - [Pasos](#pasos)
+  - [Equipo de trabajo](#equipo-de-trabajo)
+
+---
+
+## Descripción
+
+Aplicación web que permite a los usuarios explorar el catálogo de cafés y postres, ver el detalle de cada producto, gestionar su carrito de compras y acceder mediante un sistema de autenticación. El proyecto sigue una arquitectura de **feature branches**, donde cada integrante trabajó de forma independiente en su módulo asignado antes de integrarlo a la rama principal.
+
+---
+
+## Stack tecnológico
+
+| Tecnología       | Uso                                      |
+|------------------|------------------------------------------|
+| Next.js 14+      | Framework principal (App Router)         |
+| TypeScript       | Tipado estático                          |
+| Tailwind CSS     | Estilos y diseño responsivo              |
+| Shadcn UI        | Componentes de interfaz reutilizables    |
+| Git / GitHub     | Control de versiones y colaboración      |
+
+---
+
+## Estructura del proyecto
+
+```
+cafesito_frontend/
+├── app/              # Rutas y páginas (App Router de Next.js)
+├── components/       # Componentes reutilizables (Shadcn + propios)
+├── data/             # Datos estáticos del catálogo
+├── lib/              # Utilidades y helpers
+├── store/            # Estado global
+├── public/           # Archivos estáticos
+└── components.json   # Configuración de Shadcn UI
+```
+
+---
+
+## Cómo ejecutar el proyecto
+
+### Requisitos previos
+
+- Node.js `v18` o superior
+- npm `v9` o superior
+
+### Pasos
+
+**1. Clonar el repositorio**
+
+```bash
+git clone https://github.com/SandroCy6/Cafesito_frontend.git
+cd Cafesito_frontend
+```
+
+**2. Instalar dependencias**
+
+```bash
+npm install
+```
+
+**3. Iniciar el servidor de desarrollo**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**4. Abrir en el navegador**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Equipo de trabajo
 
-To learn more about Next.js, take a look at the following resources:
+| Integrante                        | Módulo asignado      | Descripción                                                        |
+|-----------------------------------|----------------------|--------------------------------------------------------------------|
+| Almendra Pacheco Santa Cruz       | Layout base / Home   | Estructura base de la aplicación: Navbar, Footer y página de inicio |
+| Alexander Xavier Neyra de la Cruz | Catálogo             | Página de listado de productos (cafés y postres) usando Cards de Shadcn |
+| Huamaní Peña Dayana Michelle      | Detalle de producto  | Vista individual de cada producto con descripción y precio         |
+| Sandro Rafael Díaz Maguiña        | Carrito              | Gestión de pedidos y cálculo del total a pagar                     |
+| Ariana Tenorio Tanta              | Autenticación        | Formularios de Login y Registro de usuario                         |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Curso: Herramientas de Desarrollo — Universidad Tecnologica del Perú 
+> Docente: Quispe Tincopa Lino Martin
