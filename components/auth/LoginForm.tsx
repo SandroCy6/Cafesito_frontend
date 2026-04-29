@@ -1,5 +1,5 @@
 "use client";
-
+import { Usuario, MOCK_USER } from "@/data/mockData";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,32 +9,34 @@ export default function LoginForm({ switchToRegister }: any) {
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: any) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!email || !password) {
-      alert("Completa todos los campos");
-      return;
-    }
+  if (!email || !password) {
+    alert("Completa todos los campos");
+    return;
+  }
 
+  // Buscar primero en mockData
+  let user = MOCK_USER.find(
+    (u:Usuario) => u.email === email && u.password === password
+  );
+
+  // Si no está en mockData, buscar en localStorage (usuarios registrados)
+  if (!user) {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    const user = users.find(
+    user = users.find(
       (u: any) => u.email === email && u.password === password
     );
+  }
 
-    if (user) {
-      // guardar sesión
-      localStorage.setItem("isLogged", "true");
-
-      alert("Bienvenido de vuelta a Harvest Coffeehouse");
-
-      //  redirigir al home
-      window.location.href = "/";
-    } else {
-      alert("Credenciales incorrectas");
-    }
-  };
-
+  if (user) {
+    localStorage.setItem("isLogged", "true");
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    window.location.href = "/";
+  } else {
+    alert("Credenciales incorrectas");
+  }
+};
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
